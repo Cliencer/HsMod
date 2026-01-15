@@ -1,0 +1,457 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{4353F22A-2F95-49D7-A5E7-3E829BD8BF4B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>HsMod</RootNamespace>
+    <AssemblyName>HsMod</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>BepInExCore\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="AppsFlyer, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>LibHearthstone\AppsFlyer.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>LibHearthstone\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>LibHearthstone\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
+    <Reference Include="BepInEx">
+      <HintPath>BepInExCore\BepInEx.dll</HintPath>
+    </Reference>
+    <Reference Include="BepInEx.Harmony">
+      <HintPath>BepInExCore\BepInEx.Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="BepInEx.Preloader">
+      <HintPath>BepInExCore\BepInEx.Preloader.dll</HintPath>
+    </Reference>
+    <Reference Include="blizzard.bgsclient">
+      <HintPath>LibHearthstone\blizzard.bgsclient.dll</HintPath>
+    </Reference>
+    <Reference Include="blizzard.bgssdk">
+      <HintPath>LibHearthstone\blizzard.bgssdk.dll</HintPath>
+    </Reference>
+    <Reference Include="Blizzard.Commerce.Model.CSharp, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>LibHearthstone\Blizzard.Commerce.Model.CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Blizzard.Commerce.Wrapper, Version=1.5.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>LibHearthstone\Blizzard.Commerce.Wrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Blizzard.T5.AssetLoader">
+      <HintPath>LibHearthstone\Blizzard.T5.AssetLoader.dll</HintPath>
+    </Reference>
+    <Reference Include="Blizzard.T5.AssetManager">
+      <HintPath>LibHearthstone\Blizzard.T5.AssetManager.dll</HintPath>
+    </Reference>
+    <Reference Include="Blizzard.T5.Configuration">
+      <HintPath>LibHearthstone\Blizzard.T5.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Blizzard.T5.Core">
+      <HintPath>LibHearthstone\Blizzard.T5.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Blizzard.T5.ErrorInterface">
+      <HintPath>LibHearthstone\Blizzard.T5.ErrorInterface.dll</HintPath>
+    </Reference>
+    <Reference Include="Blizzard.T5.FontService">
+      <HintPath>LibHearthstone\Blizzard.T5.FontService.dll</HintPath>
+    </Reference>
+    <Reference Include="Blizzard.T5.FXBuilder">
+      <HintPath>LibHearthstone\Blizzard.T5.FXBuilder.dll</HintPath>
+    </Reference>
+    <Reference Include="Blizzard.T5.Game">
+      <HintPath>LibHearthstone\Blizzard.T5.Game.dll</HintPath>
+    </Reference>
+    <Reference Include="Blizzard.T5.GameStringsInterface">
+      <HintPath>LibHearthstone\Blizzard.T5.GameStringsInterface.dll</HintPath>
+    </Reference>
+    <Reference Include="Blizzard.T5.GraphicsManagerInterface">
+      <HintPath>LibHearthstone\Blizzard.T5.GraphicsManagerInterface.dll</HintPath>
+    </Reference>
+    <Reference Include="Blizzard.T5.iTween">
+      <HintPath>LibHearthstone\Blizzard.T5.iTween.dll</HintPath>
+    </Reference>
+    <Reference Include="Blizzard.T5.JobQueue">
+      <HintPath>LibHearthstone\Blizzard.T5.JobQueue.dll</HintPath>
+    </Reference>
+    <Reference Include="Blizzard.T5.Localization">
+      <HintPath>LibHearthstone\Blizzard.T5.Localization.dll</HintPath>
+    </Reference>
+    <Reference Include="Blizzard.T5.Logging">
+      <HintPath>LibHearthstone\Blizzard.T5.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Blizzard.T5.MaterialService">
+      <HintPath>LibHearthstone\Blizzard.T5.MaterialService.dll</HintPath>
+    </Reference>
+    <Reference Include="Blizzard.T5.MiniJSON">
+      <HintPath>LibHearthstone\Blizzard.T5.MiniJSON.dll</HintPath>
+    </Reference>
+    <Reference Include="Blizzard.T5.PlayMaker.Runtime, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>LibHearthstone\Blizzard.T5.PlayMaker.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Blizzard.T5.PlayMakerCustomActions.Runtime, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>LibHearthstone\Blizzard.T5.PlayMakerCustomActions.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Blizzard.T5.ServiceLocator">
+      <HintPath>LibHearthstone\Blizzard.T5.ServiceLocator.dll</HintPath>
+    </Reference>
+    <Reference Include="Blizzard.T5.UberText.Runtime">
+      <HintPath>LibHearthstone\Blizzard.T5.UberText.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Blizzard.T5.UI.Core">
+      <HintPath>LibHearthstone\Blizzard.T5.UI.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Blizzard.Telemetry.Identity">
+      <HintPath>LibHearthstone\Blizzard.Telemetry.Identity.dll</HintPath>
+    </Reference>
+    <Reference Include="Blizzard.Telemetry.Sdk">
+      <HintPath>LibHearthstone\Blizzard.Telemetry.Sdk.dll</HintPath>
+    </Reference>
+    <Reference Include="Blizzard.Telemetry.StandardProtos.BlizzPbc">
+      <HintPath>LibHearthstone\Blizzard.Telemetry.StandardProtos.BlizzPbc.dll</HintPath>
+    </Reference>
+    <Reference Include="com.blizzard.mobile-unity-auth-sdk">
+      <HintPath>LibHearthstone\com.blizzard.mobile-unity-auth-sdk.dll</HintPath>
+    </Reference>
+    <Reference Include="ConditionalExpression">
+      <HintPath>LibHearthstone\ConditionalExpression.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Protobuf">
+      <HintPath>LibHearthstone\Google.Protobuf.dll</HintPath>
+    </Reference>
+    <Reference Include="HarmonyXInterop">
+      <HintPath>BepInExCore\HarmonyXInterop.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>BepInExCore\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Mdb">
+      <HintPath>BepInExCore\Mono.Cecil.Mdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Pdb">
+      <HintPath>BepInExCore\Mono.Cecil.Pdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Rocks">
+      <HintPath>BepInExCore\Mono.Cecil.Rocks.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Posix">
+      <HintPath>UnstrippedCorlibUinx\Mono.Posix.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Security">
+      <HintPath>UnstrippedCorlibUinx\Mono.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoMod.RuntimeDetour">
+      <HintPath>BepInExCore\MonoMod.RuntimeDetour.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoMod.Utils">
+      <HintPath>BepInExCore\MonoMod.Utils.dll</HintPath>
+    </Reference>
+    <Reference Include="mscorlib">
+      <HintPath>UnstrippedCorlibUinx\mscorlib.dll</HintPath>
+    </Reference>
+    <Reference Include="netstandard">
+      <HintPath>UnstrippedCorlibUinx\netstandard.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>LibHearthstone\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="PlayMaker">
+      <HintPath>LibHearthstone\PlayMaker.dll</HintPath>
+    </Reference>
+    <Reference Include="Polly">
+      <HintPath>LibHearthstone\Polly.dll</HintPath>
+    </Reference>
+    <Reference Include="QRCoderUnity, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>LibHearthstone\QRCoderUnity.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration">
+      <HintPath>UnstrippedCorlibUinx\System.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Diagnostics.Debug">
+      <HintPath>LibHearthstone\System.Diagnostics.Debug.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Diagnostics.StackTrace">
+      <HintPath>LibHearthstone\System.Diagnostics.StackTrace.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Diagnostics.Tracing">
+      <HintPath>LibHearthstone\System.Diagnostics.Tracing.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Globalization">
+      <HintPath>LibHearthstone\System.Globalization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Globalization.Extensions">
+      <HintPath>LibHearthstone\System.Globalization.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Compression">
+      <HintPath>LibHearthstone\System.IO.Compression.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+      <HintPath>UnstrippedCorlibUinx\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics">
+      <HintPath>UnstrippedCorlibUinx\System.Numerics.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reflection">
+      <HintPath>LibHearthstone\System.Reflection.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Resources.ResourceManager">
+      <HintPath>LibHearthstone\System.Resources.ResourceManager.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime">
+      <HintPath>LibHearthstone\System.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe">
+      <HintPath>LibHearthstone\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Extensions">
+      <HintPath>LibHearthstone\System.Runtime.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.InteropServices">
+      <HintPath>LibHearthstone\System.Runtime.InteropServices.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization">
+      <HintPath>UnstrippedCorlibUinx\System.Runtime.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security">
+      <HintPath>UnstrippedCorlibUinx\System.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading">
+      <HintPath>LibHearthstone\System.Threading.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq">
+      <HintPath>UnstrippedCorlibUinx\System.Xml.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="UniTask">
+      <HintPath>UnstrippedCorlibUinx\UniTask.dll</HintPath>
+    </Reference>
+    <Reference Include="UniTask.Linq">
+      <HintPath>UnstrippedCorlibUinx\UniTask.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Burst">
+      <HintPath>LibHearthstone\Unity.Burst.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Mathematics">
+      <HintPath>LibHearthstone\Unity.Mathematics.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RenderPipeline.Universal.ShaderLibrary">
+      <HintPath>LibHearthstone\Unity.RenderPipeline.Universal.ShaderLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.Core.Runtime">
+      <HintPath>LibHearthstone\Unity.RenderPipelines.Core.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.Universal.Runtime">
+      <HintPath>LibHearthstone\Unity.RenderPipelines.Universal.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.SharpZipLib">
+      <HintPath>LibHearthstone\Unity.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Timeline">
+      <HintPath>LibHearthstone\Unity.Timeline.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.ZombieObjectDetector.Runtime">
+      <HintPath>LibHearthstone\Unity.ZombieObjectDetector.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>LibHearthstone\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AIModule">
+      <HintPath>LibHearthstone\UnityEngine.AIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AndroidJNIModule">
+      <HintPath>LibHearthstone\UnityEngine.AndroidJNIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AnimationModule">
+      <HintPath>LibHearthstone\UnityEngine.AnimationModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AssetBundleModule">
+      <HintPath>LibHearthstone\UnityEngine.AssetBundleModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AudioModule">
+      <HintPath>LibHearthstone\UnityEngine.AudioModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>LibHearthstone\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.DirectorModule">
+      <HintPath>LibHearthstone\UnityEngine.DirectorModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.GridModule">
+      <HintPath>LibHearthstone\UnityEngine.GridModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ImageConversionModule">
+      <HintPath>LibHearthstone\UnityEngine.ImageConversionModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>LibHearthstone\UnityEngine.IMGUIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule">
+      <HintPath>LibHearthstone\UnityEngine.InputLegacyModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.InputModule">
+      <HintPath>LibHearthstone\UnityEngine.InputModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.JSONSerializeModule">
+      <HintPath>LibHearthstone\UnityEngine.JSONSerializeModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ParticleSystemModule">
+      <HintPath>LibHearthstone\UnityEngine.ParticleSystemModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Physics2DModule">
+      <HintPath>LibHearthstone\UnityEngine.Physics2DModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>LibHearthstone\UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ScreenCaptureModule">
+      <HintPath>LibHearthstone\UnityEngine.ScreenCaptureModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SharedInternalsModule">
+      <HintPath>LibHearthstone\UnityEngine.SharedInternalsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SpriteShapeModule">
+      <HintPath>LibHearthstone\UnityEngine.SpriteShapeModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SubsystemsModule">
+      <HintPath>LibHearthstone\UnityEngine.SubsystemsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TerrainModule">
+      <HintPath>LibHearthstone\UnityEngine.TerrainModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextCoreFontEngineModule">
+      <HintPath>LibHearthstone\UnityEngine.TextCoreFontEngineModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextCoreTextEngineModule">
+      <HintPath>LibHearthstone\UnityEngine.TextCoreTextEngineModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>LibHearthstone\UnityEngine.TextRenderingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TilemapModule">
+      <HintPath>LibHearthstone\UnityEngine.TilemapModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>LibHearthstone\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIElementsModule">
+      <HintPath>LibHearthstone\UnityEngine.UIElementsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>LibHearthstone\UnityEngine.UIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityAnalyticsModule">
+      <HintPath>LibHearthstone\UnityEngine.UnityAnalyticsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestModule">
+      <HintPath>LibHearthstone\UnityEngine.UnityWebRequestModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestTextureModule">
+      <HintPath>LibHearthstone\UnityEngine.UnityWebRequestTextureModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VFXModule">
+      <HintPath>LibHearthstone\UnityEngine.VFXModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VideoModule">
+      <HintPath>LibHearthstone\UnityEngine.VideoModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VRModule">
+      <HintPath>LibHearthstone\UnityEngine.VRModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.WindModule">
+      <HintPath>LibHearthstone\UnityEngine.WindModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.XRModule">
+      <HintPath>LibHearthstone\UnityEngine.XRModule.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="FileManager.cs" />
+    <Compile Include="LocalizationManager.cs" />
+    <Compile Include="PluginConfig.cs" />
+    <Compile Include="Patcher.cs" />
+    <Compile Include="Main.cs" />
+    <Compile Include="PluginInfo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UtilsSkins.cs" />
+    <Compile Include="Utils.cs" />
+    <Compile Include="UtilsArgu.cs" />
+    <Compile Include="WebApi.cs" />
+    <Compile Include="WebPage.cs" />
+    <Compile Include="WebServer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="WebResources\jquery.min.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Languages\deDE.json" />
+    <EmbeddedResource Include="Languages\enGB.json" />
+    <EmbeddedResource Include="Languages\enUS.json" />
+    <EmbeddedResource Include="Languages\esES.json" />
+    <EmbeddedResource Include="Languages\esMX.json" />
+    <EmbeddedResource Include="Languages\frFR.json" />
+    <EmbeddedResource Include="Languages\itIT.json" />
+    <EmbeddedResource Include="Languages\jaJP.json" />
+    <EmbeddedResource Include="Languages\koKR.json" />
+    <EmbeddedResource Include="Languages\plPL.json" />
+    <EmbeddedResource Include="Languages\ptBR.json" />
+    <EmbeddedResource Include="Languages\ruRU.json" />
+    <EmbeddedResource Include="Languages\thTH.json" />
+    <EmbeddedResource Include="Languages\zhCN.json" />
+    <EmbeddedResource Include="Languages\zhTW.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="WebResources\HsMod.template.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="WebResources\shell.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="WebResources\about.enUS.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="WebResources\about.zhCN.html" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>$(ProjectDir)\install.bat</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+         Other similar extension points exist, see Microsoft.Common.targets.
+    <Target Name="BeforeBuild">
+    </Target>
+    <Target Name="AfterBuild">
+    </Target>
+    -->
+</Project>
