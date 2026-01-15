@@ -1,0 +1,111 @@
+name: Auto Release
+
+on:
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+jobs:
+  sync:
+
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout fork repo
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Add upstream
+      run: |
+          git remote add upstream https://github.com/Pik-4/HsMod.git
+          git fetch upstream    
+          
+    - name: Checkout upstream to temp dir
+      run: |
+          mkdir upstream_tmp
+          git --work-tree=upstream_tmp checkout upstream/bepinex5 -- .
+          
+    - name: Sync upstream (exclude workflows)
+      shell: pwsh
+      run: |
+          Push-Location upstream_tmp
+
+          robocopy . $env:GITHUB_WORKSPACE `
+            /MIR `
+            /XD .git .github upstream_tmp `
+            /R:1 /W:1
+
+          Pop-Location
+          if ($LASTEXITCODE -lt 8) {
+            
+            exit 0
+          } else {
+            exit $LASTEXITCODE
+          }
+          
+          
+    - name: Clean temp
+      shell: pwsh
+      run: |
+          Remove-Item -Path upstream_tmp -Recurse
+
+
+
+    - name: Restore workflows folder
+      run: |
+          git checkout -- .github/workflows
+          
+    - name: Commit changes
+      shell: pwsh
+      run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          if (git status --porcelain) {
+            git add .
+            git commit -m "chore: sync from upstream"
+            git push origin HEAD
+          } else {
+            Write-Host "No changes to commit"
+          }    
+  build:
+    needs: sync
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout fork repo
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.x
+        
+    - name: List files
+      run: tree /f
+      
+    - name: Restore dependencies
+      run: dotnet restore --locked-mode
+      
+    - name: Build HsMod
+      run: dotnet build --configuration Release --no-restore
+      
+    - name: Generate release tag
+      id: tag
+      run: |
+        Get-Content ./HsMod/PluginInfo.cs | Select-String -Pattern 'public const string PLUGIN_VERSION = "(.*?)"' | ForEach-Object { ($_ -match '"(.*?)"') | Out-Null }
+        $version = $matches[1];
+        echo "PLUGIN_VERSION=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+    - name: Create Release
+      id: create_release
+      uses: softprops/action-gh-release@v2
+      env:
+        CURRENT_TAG: ${{ steps.tag.outputs.PLUGIN_VERSION }}
+      with:
+        tag_name: ${{ steps.tag.outputs.PLUGIN_VERSION }}
+        files: ./HsMod/Release/HsMod.dll
+        prerelease: false
+        make_latest: true
+        generate_release_notes: true
