@@ -88,7 +88,7 @@ dotnet build --configuration Release --no-restore
 3. 2.1. Download [BepInEx_x86](https://github.com/BepInEx/BepInEx/releases) and extract it to the Hearthstone root directory `Hearthstone\`.
 4. 2.2. create a directory `Hearthstone\BepInEx\unstripped_corlib\`; Copy all dlls under the project directory HsMod/UnstrippedCorlib to the unstripped_corlib directory. 
 5. 2.3. Modify `Hearthstone\doorstop_config.ini` by replacing `dllSearchPathOverride=` with `dllSearchPathOverride=BepInEx\unstripped_corlib`
-6. Note: In [BepInEx 5.4.23.2](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.23.2), modify `Hearthstone\doorstop_config.ini` to replace `dll_search_path_override =` with `dll_search_path_override = BepInEx\unstripped_corlib` `corlib`
+6. Note: In [BepInEx 5.4.23.2](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.23.2), modify `Hearthstone\doorstop_config.ini` to replace `dll_search_path_override =` with `dll_search_path_override = BepInEx\unstripped_corlib`
 7. Store `HsMod.dll` in `Hearthstone\BepInEx\plugins`.
 
 #### Mac
