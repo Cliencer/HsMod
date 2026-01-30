@@ -1042,7 +1042,12 @@ namespace HsMod
                 return list;
             }
 
-
+            [HarmonyPostfix]
+            [HarmonyPatch(typeof(Log), "ConfigureLogSystem")]
+            private static void PatchConfigureLogSystem()
+            {
+                Log.SetStandardLogInfo("LoadingScreen", Blizzard.T5.Logging.LogLevel.Debug);
+            }
         }
 
         public class PatchBoxesReward
