@@ -176,7 +176,7 @@
       <HintPath>UnstrippedCorlibUinx\netstandard.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>LibHearthstone\Newtonsoft.Json.dll</HintPath>
+      <HintPath>UnstrippedCorlibUinx\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PlayMaker">
       <HintPath>LibHearthstone\PlayMaker.dll</HintPath>
@@ -438,6 +438,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="WebResources\about.zhCN.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="WebResources\config.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -232,6 +232,32 @@ namespace HsMod
                     }
                 }
             }
+            else if (rawUrLower.StartsWith("/api/config") && request.HttpMethod == "GET")
+            {
+                // Return config metadata as JSON
+                context.Response.ContentType = "application/json; charset=UTF-8";
+                string output = string.Empty;
+                try
+                {
+                    // Parse lang parameter from query string
+                    string lang = null;
+                    var queryString = request.QueryString;
+                    if (queryString["lang"] != null && !string.IsNullOrEmpty(queryString["lang"]))
+                    {
+                        lang = queryString["lang"];
+                    }
+                    output = WebApi.GetAllConfigMetadata(lang);
+                }
+                catch (Exception ex)
+                {
+                    context.Response.StatusCode = 500;
+                    output = $"{{\"error\":\"{ex.Message}\"}}";
+                }
+                using (var writer = new StreamWriter(context.Response.OutputStream))
+                {
+                    await writer.WriteLineAsync(output);
+                }
+            }
             else
             {
                 context.Response.ContentType = DetermineContentType(rawUrLower);
@@ -327,6 +353,8 @@ namespace HsMod
                     return WebPage.HsModCfgPage("HsMod.cfg");
                 case "/hsskins.cfg":
                     return WebPage.HsModCfgPage("HsSkins.cfg");
+                case "/config":
+                    return WebPage.ConfigPage();
                 case "":
                 case "/":
                 case "/home":

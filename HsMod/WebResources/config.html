@@ -1,0 +1,271 @@
+<style>
+    .config-group { margin-bottom: 20px; border: 1px solid rgba(102, 204, 255, 0.3); border-radius: 8px; padding: 15px; }
+    .config-group-title { font-size: 1.2em; font-weight: bold; color: #66CCFF; margin-bottom: 10px; cursor: pointer; }
+    .config-group-title:hover { text-decoration: underline; }
+    .config-item { display: flex; flex-wrap: wrap; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(0,0,0,0.1); }
+    .config-item:last-child { border-bottom: none; }
+    .config-item.advanced { background: rgba(255, 193, 7, 0.1); border-left: 3px solid #FFC107; padding-left: 12px; }
+    .config-name { flex: 1; min-width: 200px; font-weight: bold; }
+    .config-desc { flex: 2; min-width: 200px; font-size: 0.9em; color: #666; }
+    .config-input { flex: 1; min-width: 150px; text-align: right; }
+    .config-input input, .config-input select { padding: 5px; border: 1px solid #66CCFF; border-radius: 4px; }
+    .config-input input[type='checkbox'] { width: 20px; height: 20px; }
+    .config-input input[type='number'], .config-input input[type='text'], .config-input select { width: 100%; max-width: 200px; }
+    .hidden { display: none !important; }
+    .toast-success { background-color: #01FF70; }
+    .toast-error { background-color: #FF4136; }
+    .lang-selector { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; background: rgba(102, 204, 255, 0.1); border-radius: 4px; }
+    .lang-selector select { padding: 4px 8px; border: 1px solid #66CCFF; border-radius: 4px; background: white; cursor: pointer; }
+    .lang-selector label { font-size: 0.9em; color: #666; }
+    .advanced-toggle { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; background: rgba(255, 193, 7, 0.1); border-radius: 4px; }
+    .advanced-toggle input { width: 16px; height: 16px; cursor: pointer; }
+    .advanced-toggle label { font-size: 0.9em; color: #666; cursor: pointer; }
+
+    /* Modal styles */
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
+    .modal-content { background: white; padding: 24px; border-radius: 8px; max-width: 400px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+    .modal-content h3 { color: #FF4136; margin-bottom: 16px; }
+    .modal-content p { color: #666; margin-bottom: 20px; line-height: 1.5; }
+    .modal-buttons { display: flex; gap: 12px; justify-content: center; }
+    .modal-buttons button { padding: 8px 20px; border-radius: 4px; cursor: pointer; font-size: 14px; }
+    .modal-btn-cancel { background: #eee; border: 1px solid #ccc; color: #666; }
+    .modal-btn-confirm { background: #FF4136; border: none; color: white; }
+    .modal-btn-cancel:hover { background: #ddd; }
+    .modal-btn-confirm:hover { background: #E53935; }
+
+    /* Control bar */
+    .control-bar { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px; margin-bottom: 15px; }
+</style>
+<div id="config-container">
+    <div class="control-bar">
+        <div class="lang-selector">
+            <label>{config.page.language}:</label>
+            <select id="lang-select" onchange="changeLanguage(this.value)">
+                <option value="auto">{config.page.lang.auto}</option>
+                <option value="enUS">English</option>
+                <option value="zhCN">简体中文</option>
+                <option value="zhTW">繁體中文</option>
+                <option value="jaJP">日本語</option>
+                <option value="koKR">한국어</option>
+                <option value="deDE">Deutsch</option>
+                <option value="frFR">Français</option>
+                <option value="esES">Español</option>
+                <option value="ruRU">Русский</option>
+                <option value="ptBR">Português</option>
+                <option value="itIT">Italiano</option>
+                <option value="plPL">Polski</option>
+                <option value="thTH">ไทย</option>
+            </select>
+        </div>
+        <div class="advanced-toggle">
+            <input type="checkbox" id="show-advanced" onchange="toggleAdvancedWarning(this.checked)">
+            <label for="show-advanced">{config.page.advanced}</label>
+        </div>
+    </div>
+    <div style="text-align: center; margin-bottom: 15px;">
+        <input type="text" id="search-input" placeholder="{config.page.search}" style="width: 80%; max-width: 400px; padding: 8px; border: 1px solid #66CCFF; border-radius: 4px;">
+    </div>
+    <div id="config-groups"></div>
+</div>
+
+<!-- Warning Modal -->
+<div id="advanced-modal" class="modal-overlay">
+    <div class="modal-content">
+        <h3>⚠️ {config.page.warning}</h3>
+        <p>{config.page.warning.desc}</p>
+        <div class="modal-buttons">
+            <button class="modal-btn-cancel" onclick="cancelAdvanced()">{config.page.cancel}</button>
+            <button class="modal-btn-confirm" onclick="confirmAdvanced()">{config.page.confirm}</button>
+        </div>
+    </div>
+</div>
+
+<div id="toast" style="display:none; position:fixed; bottom:20px; left:20px; padding:10px 20px; border-radius:4px; color:white;"></div>
+<script src="/jquery.min.js"></script>
+<script>
+let configData = null;
+let currentLang = 'auto';
+let showAdvanced = false;
+const i18n = {
+    success: '{config.page.success}',
+    error: '{config.page.error}'
+};
+
+function detectBrowserLang() {
+    const browserLang = navigator.language || navigator.userLanguage;
+    const langMap = {
+        'zh-CN': 'zhCN', 'zh-TW': 'zhTW', 'zh-HK': 'zhTW', 'zh': 'zhCN',
+        'en': 'enUS', 'en-US': 'enUS', 'en-GB': 'enGB',
+        'ja': 'jaJP', 'ko': 'koKR', 'de': 'deDE', 'fr': 'frFR',
+        'es': 'esES', 'ru': 'ruRU', 'pt': 'ptBR', 'it': 'itIT', 'pl': 'plPL', 'th': 'thTH'
+    };
+    return langMap[browserLang] || langMap[browserLang.split('-')[0]] || 'enUS';
+}
+
+function getLangParam() {
+    return currentLang === 'auto' ? detectBrowserLang() : currentLang;
+}
+
+function changeLanguage(lang) {
+    currentLang = lang;
+    loadConfig();
+}
+
+function toggleAdvancedWarning(checked) {
+    if (checked) {
+        document.getElementById('advanced-modal').style.display = 'flex';
+        document.getElementById('show-advanced').checked = false;
+    } else {
+        showAdvanced = false;
+        renderConfig(configData);
+    }
+}
+
+function cancelAdvanced() {
+    document.getElementById('advanced-modal').style.display = 'none';
+    document.getElementById('show-advanced').checked = false;
+}
+
+function confirmAdvanced() {
+    document.getElementById('advanced-modal').style.display = 'none';
+    document.getElementById('show-advanced').checked = true;
+    showAdvanced = true;
+    renderConfig(configData);
+}
+
+function showToast(message, isSuccess) {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.className = isSuccess ? 'toast-success' : 'toast-error';
+    toast.style.display = 'block';
+    setTimeout(() => { toast.style.display = 'none'; }, 3000);
+}
+
+function saveConfig(key, value) {
+    fetch('/config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key: key + '.name', value: String(value) })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 200) {
+            showToast(i18n.success, true);
+        } else {
+            showToast(i18n.error + ': ' + data.output, false);
+        }
+    })
+    .catch(err => showToast(i18n.error + ': ' + err, false));
+}
+
+function createConfigInput(item) {
+    const key = item.key;
+    const type = item.type;
+    const value = item.value;
+
+    if (type === 'bool') {
+        const checked = value.toLowerCase() === 'true' ? 'checked' : '';
+        return `<input type='checkbox' ${checked} onchange="saveConfig('${key}', this.checked)">`;
+    } else if (type === 'enum') {
+        let options = item.enumValues.map(v => `<option value='${v}' ${v === value ? 'selected' : ''}>${v}</option>`).join('');
+        return `<select onchange="saveConfig('${key}', this.value)">${options}</select>`;
+    } else if (type === 'int' || type === 'long') {
+        const min = item.min !== undefined ? `min='${item.min}'` : '';
+        const max = item.max !== undefined ? `max='${item.max}'` : '';
+        return `<input type='number' value='${value}' ${min} ${max} step='1' onchange="saveConfig('${key}', this.value)">`;
+    } else if (type === 'float') {
+        const min = item.min !== undefined ? `min='${item.min}'` : '';
+        const max = item.max !== undefined ? `max='${item.max}'` : '';
+        return `<input type='number' value='${value}' ${min} ${max} step='0.1' onchange="saveConfig('${key}', this.value)">`;
+    } else if (type === 'keyboard') {
+        return `<input type='text' value='${value}' onchange="saveConfig('${key}', this.value)" placeholder='e.g. LeftControl + D'>`;
+    } else {
+        return `<input type='text' value='${value}' onchange="saveConfig('${key}', this.value)">`;
+    }
+}
+
+function renderConfig(data) {
+    if (!data) return;
+    configData = data;
+    const container = document.getElementById('config-groups');
+    container.innerHTML = '';
+
+    const groups = data.groups;
+    for (const groupName in groups) {
+        const items = groups[groupName].filter(item => showAdvanced || !item.isAdvanced);
+        if (items.length === 0) continue;
+
+        const groupDiv = document.createElement('div');
+        groupDiv.className = 'config-group';
+        groupDiv.setAttribute('data-group', groupName);
+
+        const titleDiv = document.createElement('div');
+        titleDiv.className = 'config-group-title';
+        titleDiv.textContent = groupName + ' (' + items.length + ')';
+        titleDiv.onclick = function() {
+            const content = this.nextElementSibling;
+            content.style.display = content.style.display === 'none' ? 'block' : 'none';
+        };
+        groupDiv.appendChild(titleDiv);
+
+        const contentDiv = document.createElement('div');
+        contentDiv.className = 'config-group-content';
+
+        items.forEach(item => {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'config-item' + (item.isAdvanced ? ' advanced' : '');
+            itemDiv.setAttribute('data-key', item.key);
+            itemDiv.setAttribute('data-name', item.name.toLowerCase());
+            itemDiv.setAttribute('data-desc', item.description.toLowerCase());
+
+            itemDiv.innerHTML = `
+                <div class='config-name'>${item.name}</div>
+                <div class='config-desc'>${item.description}</div>
+                <div class='config-input'>${createConfigInput(item)}</div>
+            `;
+            contentDiv.appendChild(itemDiv);
+        });
+
+        groupDiv.appendChild(contentDiv);
+        container.appendChild(groupDiv);
+    }
+}
+
+function filterConfig(keyword) {
+    keyword = keyword.toLowerCase();
+    document.querySelectorAll('.config-item').forEach(item => {
+        const name = item.getAttribute('data-name');
+        const desc = item.getAttribute('data-desc');
+        const key = item.getAttribute('data-key').toLowerCase();
+        if (name.includes(keyword) || desc.includes(keyword) || key.includes(keyword)) {
+            item.classList.remove('hidden');
+        } else {
+            item.classList.add('hidden');
+        }
+    });
+
+    document.querySelectorAll('.config-group').forEach(group => {
+        const visibleItems = group.querySelectorAll('.config-item:not(.hidden)');
+        if (visibleItems.length === 0) {
+            group.classList.add('hidden');
+        } else {
+            group.classList.remove('hidden');
+        }
+    });
+}
+
+function loadConfig() {
+    const lang = getLangParam();
+    fetch('/api/config?lang=' + lang)
+        .then(response => response.json())
+        .then(data => renderConfig(data))
+        .catch(err => console.error('Failed to load config:', err));
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadConfig();
+    document.getElementById('search-input').addEventListener('input', function() {
+        filterConfig(this.value);
+    });
+});
+</script>
