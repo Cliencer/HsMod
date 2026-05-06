@@ -918,35 +918,36 @@ namespace HsMod
                 }
             }
 
-            [HarmonyPrefix]
-            [HarmonyPatch(typeof(DeckPickerTrayDisplay), "OnCustomDeckPressed")]
-            private static bool PatchOnCustomDeckPressed(DeckPickerTrayDisplay __instance,
-                ref CollectionDeckBoxVisual deckbox)
-            {
-                if (!checkCollDeckValidForMode.Value)
-                {
-                    return true;
-                }
+            // fixme: no ShowClickedStandardDeckInTwistPopup
+            //[HarmonyPrefix]
+            //[HarmonyPatch(typeof(DeckPickerTrayDisplay), "OnCustomDeckPressed")]
+            //private static bool PatchOnCustomDeckPressed(DeckPickerTrayDisplay __instance,
+            //    ref CollectionDeckBoxVisual deckbox)
+            //{
+            //    if (!checkCollDeckValidForMode.Value)
+            //    {
+            //        return true;
+            //    }
 
-                if (SceneMgr.Get().GetMode() == SceneMgr.Mode.TOURNAMENT && Options.GetInRankedPlayMode())
-                {
-                    CollectionDeck collectionDeck = deckbox.GetCollectionDeck();
-                    if (collectionDeck == null)
-                    {
-                        return true;
-                    }
+            //    if (SceneMgr.Get().GetMode() == SceneMgr.Mode.TOURNAMENT && Options.GetInRankedPlayMode())
+            //    {
+            //        CollectionDeck collectionDeck = deckbox.GetCollectionDeck();
+            //        if (collectionDeck == null)
+            //        {
+            //            return true;
+            //        }
 
-                    // 如果选择的是标准卡组，且当前模式是狂野模式，则给出提示，防止误触
-                    if (collectionDeck.FormatType == PegasusShared.FormatType.FT_STANDARD &&
-                        (int)Options.GetFormatType() == 1)
-                    {
-                        __instance.ShowClickedStandardDeckInTwistPopup();
-                        return false;
-                    }
-                }
+            //        // 如果选择的是标准卡组，且当前模式是狂野模式，则给出提示，防止误触
+            //        if (collectionDeck.FormatType == PegasusShared.FormatType.FT_STANDARD &&
+            //            (int)Options.GetFormatType() == 1)
+            //        {
+            //            __instance.ShowClickedStandardDeckInTwistPopup();
+            //            return false;
+            //        }
+            //    }
 
-                return true;
-            }
+            //    return true;
+            //}
 
             [HarmonyPrefix]
             [HarmonyPatch(typeof(CollectionDeckBoxVisual), "CanSelectDeck")]
