@@ -1705,10 +1705,10 @@ namespace HsMod
 
             //金卡钻石卡补丁
             [HarmonyPrefix]
-            [HarmonyPatch(typeof(Entity), "GetPremiumType")]
-            public static bool PatchGetPremiumType(Entity __instance, ref TAG_PREMIUM __result)
+            [HarmonyPatch(typeof(Entity), "SetRealTimePremium")]
+            public static bool PatchGetPremiumType(Entity __instance, ref TAG_PREMIUM ___m_realTimePremium)
             {
-                return Utils.GetPremiumType(ref __instance, ref __result);
+                return Utils.GetPremiumType(ref __instance, ref ___m_realTimePremium);
             }
             [HarmonyPrefix]
             [HarmonyPatch(typeof(Actor), nameof(Actor.GetPremium))]

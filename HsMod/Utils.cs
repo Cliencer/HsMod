@@ -720,12 +720,12 @@ namespace HsMod
                 {
                     foreach (var bundle in StoreManager.Get().GetAvailableBundlesForProduct(t, true))
                     {
-                        Utils.MyLogger(LogLevel.Info, $"[{StoreManager.Get().CanBuyBundle(bundle)}]{t.ToString()}[true] type={bundle?.GetFirstVirtualCurrencyPriceType()} id={bundle?.Id} title={bundle?.Title} des={bundle?.Description}");
+                        Utils.MyLogger(LogLevel.Info, $"[{StoreManager.Get().CanBuyBundle(bundle)}]{t.ToString()}[true] type={bundle?.GetFirstNonGoldVirtualCurrencyPriceType()} id={bundle?.Id} title={bundle?.Title} des={bundle?.Description}");
                         if (bundle?.Id.Value == 1888902) //战旗代币
                         {
                             continue;
                         }
-                        if (bundle?.GetFirstVirtualCurrencyPriceType() == CurrencyType.NONE)
+                        if (bundle?.GetFirstNonGoldVirtualCurrencyPriceType() == CurrencyType.NONE)
                         {
                             if (!bundle.TryGetBundlePrice(CurrencyType.GOLD, out _))
                             {
@@ -754,7 +754,7 @@ namespace HsMod
                                     //Utils.MyLogger(LogLevel.Warning, string.Format("Product {0} does not have requested cost for {1}", bundle.Id, pd));
                                     continue;
                                 }
-                                Utils.MyLogger(LogLevel.Info, $"type={pt} Currency/FirstVirtualCurrency={pd?.Currency}/{bundle?.GetFirstVirtualCurrencyPriceType()} price={totalPrice} Amount={pd?.Amount} OriginalAmount={pd?.OriginalAmount} OriginalDisplayText={pd?.OriginalDisplayText}");
+                                Utils.MyLogger(LogLevel.Info, $"type={pt} Currency/FirstVirtualCurrency={pd?.Currency}/{bundle?.GetFirstNonGoldVirtualCurrencyPriceType()} price={totalPrice} Amount={pd?.Amount} OriginalAmount={pd?.OriginalAmount} OriginalDisplayText={pd?.OriginalDisplayText}");
                                 if (totalPrice == 0)
                                 {
                                     Utils.MyLogger(LogLevel.Warning, $"{t.ToString()}[true] id={bundle?.Id} title={bundle?.Title} price=0!!!");
@@ -781,9 +781,9 @@ namespace HsMod
                         foreach (var bundle in StoreManager.Get().GetAvailableBundlesForProduct(t, false))
                         {
                             // ！！！
-                            Utils.MyLogger(LogLevel.Info, $"[{StoreManager.Get().CanBuyBundle(bundle)}]{t.ToString()}[false] type={bundle?.GetFirstVirtualCurrencyPriceType()} id={bundle?.Id} title={bundle?.Title} des={bundle?.Description}");
+                            Utils.MyLogger(LogLevel.Info, $"[{StoreManager.Get().CanBuyBundle(bundle)}]{t.ToString()}[false] type={bundle?.GetFirstNonGoldVirtualCurrencyPriceType()} id={bundle?.Id} title={bundle?.Title} des={bundle?.Description}");
 
-                            if (bundle?.GetFirstVirtualCurrencyPriceType() == CurrencyType.NONE)
+                            if (bundle?.GetFirstNonGoldVirtualCurrencyPriceType() == CurrencyType.NONE)
                             {
                                 if (!bundle.TryGetBundlePrice(CurrencyType.GOLD, out _))
                                 {
