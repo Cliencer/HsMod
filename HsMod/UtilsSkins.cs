@@ -5,7 +5,8 @@ namespace HsMod
 {
     public partial class Utils
     {
-        public static bool GetPremiumType(ref Entity ___m_entity, ref TAG_PREMIUM __result)
+        public static bool GetPremiumType<T>(ref T ___m_entity, ref TAG_PREMIUM __result)
+            where T : EntityBase
         {
             try
             {
@@ -33,9 +34,13 @@ namespace HsMod
                             mercDiamond = true;
                         }
                     }
+                    
+                    var controllerSide = GameState.Get()?.GetPlayer(___m_entity.GetControllerId())?.GetSide() ?? Player.Side.NEUTRAL;
+                    bool isControlledByOpposingSidePlayer = controllerSide == Player.Side.OPPOSING;
+                    bool isControlledByFriendlySidePlayer = controllerSide == Player.Side.FRIENDLY;
 
                     //屏蔽对手特效
-                    if (___m_entity.IsControlledByOpposingSidePlayer() && (!isOpponentGoldenCardShow.Value) && (!GameMgr.Get().IsBattlegrounds()))
+                    if (isControlledByOpposingSidePlayer && (!isOpponentGoldenCardShow.Value) && (!GameMgr.Get().IsBattlegrounds()))
                     {
                         __result = TAG_PREMIUM.NORMAL;
                         if (isMerc)
@@ -52,7 +57,7 @@ namespace HsMod
                     {
                         if (___m_entity.HasTag(GAME_TAG.HAS_DIAMOND_QUALITY) || mercDiamond)
                         {
-                            if (mMaxState == Utils.CardState.All || (mMaxState == Utils.CardState.OnlyMy && ___m_entity.IsControlledByFriendlySidePlayer()))
+                            if (mMaxState == Utils.CardState.All || (mMaxState == Utils.CardState.OnlyMy && isControlledByFriendlySidePlayer))
                             {
                                 if (mercDiamond)
                                 {
@@ -76,7 +81,7 @@ namespace HsMod
 
                         if (___m_entity.HasTag(GAME_TAG.HAS_SIGNATURE_QUALITY) && isSignatureCardStateEnable.Value)
                         {
-                            if (mMaxState == Utils.CardState.All || (mMaxState == Utils.CardState.OnlyMy && ___m_entity.IsControlledByFriendlySidePlayer()))
+                            if (mMaxState == Utils.CardState.All || (mMaxState == Utils.CardState.OnlyMy && isControlledByFriendlySidePlayer))
                             {
                                 __result = TAG_PREMIUM.SIGNATURE;
                                 ___m_entity.SetTag(GAME_TAG.PREMIUM, TAG_PREMIUM.SIGNATURE);
@@ -96,7 +101,7 @@ namespace HsMod
                         }
                     }
                     //金卡特效
-                    if (mGolden == Utils.CardState.All || (mGolden == Utils.CardState.OnlyMy && ___m_entity.IsControlledByFriendlySidePlayer()))
+                    if (mGolden == Utils.CardState.All || (mGolden == Utils.CardState.OnlyMy && isControlledByFriendlySidePlayer))
                     {
                         ___m_entity.SetTag(GAME_TAG.PREMIUM, TAG_PREMIUM.GOLDEN);
                         __result = TAG_PREMIUM.GOLDEN;
