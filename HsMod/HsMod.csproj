@@ -184,10 +184,6 @@
     <Reference Include="Polly">
       <HintPath>LibHearthstone\Polly.dll</HintPath>
     </Reference>
-    <Reference Include="QRCoderUnity, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>LibHearthstone\QRCoderUnity.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration">
       <HintPath>UnstrippedCorlibUinx\System.Configuration.dll</HintPath>
@@ -397,6 +393,8 @@
     <Compile Include="LocalizationManager.cs" />
     <Compile Include="PluginConfig.cs" />
     <Compile Include="Patcher.cs" />
+    <Compile Include="Patches\Helpers.cs" />
+    <Compile Include="Patches\*.cs" Exclude="Patches\Helpers.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="PluginInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

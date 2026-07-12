@@ -61,7 +61,7 @@ namespace HsMod
         public static ConfigEntry<bool> isBgsSeasonTicketUnlock;
         public static ConfigEntry<bool> isBgsUnlockCollectionEnable;
 
-        
+
         public static ConfigEntry<bool> isPatchAssetLoader;
         public static ConfigEntry<bool> shieldMainBoxLuckyDraw;
         // 卡牌原画导出

@@ -1420,7 +1420,7 @@ namespace HsMod
                         System.IO.File.AppendAllText(savePath, saveString + "\n");
                     }
                 }
-                
+
             }
         }
 
