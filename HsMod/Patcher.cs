@@ -88,6 +88,14 @@ namespace HsMod
                 TimeScaleMgr.Get().Update();
             };
 
+            isBlockStreamerMode.SettingChanged += delegate
+            {
+                //开启时立即关闭已保存的主播模式
+                if (isBlockStreamerMode.Value)
+                {
+                    try { Options.Get()?.SetBool(Option.STREAMER_MODE, false); } catch { }
+                }
+            };
             isShowCardLargeCount.SettingChanged += delegate
             {
                 if (isShowCardLargeCount.Value)
@@ -207,6 +215,8 @@ namespace HsMod
             LoadPatch(typeof(Patcher.PatchFavorite));
             LoadPatch(typeof(Patcher.PatchFakeDevice));
             LoadPatch(typeof(Patcher.PatchDevOptioins));
+            LoadPatch(typeof(Patcher.PatchGameMenu));
+            LoadPatch(typeof(Patcher.PatchBgRank));
             if (isShowCardLargeCount.Value)
             {
                 LoadPatch(typeof(Patcher.PatchRealtimeCardNum));

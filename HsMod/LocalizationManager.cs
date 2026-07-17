@@ -9,19 +9,34 @@ namespace HsMod
     {
         public static string GetCurrentLang()
         {
-            System.Globalization.CultureInfo currentCulture = System.Globalization.CultureInfo.CurrentCulture;
-            string languageCode = currentCulture.Name.Replace("-", "");
-            string res = languageCode;
-            //var localName = Localization.GetLocale();
-            //if (localName == Locale.UNKNOWN)
-            //{
-            //    Utils.MyLogger(BepInEx.Logging.LogLevel.Warning, $"Hearthstone Locale Not Found, now using enUS");
-            //    res = "enUS";
-            //}
-            //else { res = localName.ToString(); }
+            //优先使用炉石客户端自身的语言：Unity的CurrentCulture在部分环境下不可靠
+            //（可能返回Invariant或与系统区域不符），导致语言"偶尔检测错误"
+            string res = null;
+            string gameLocale = "N/A";
+            try
+            {
+                Locale locale = Localization.GetLocale();
+                gameLocale = locale.ToString();
+                if (locale != Locale.UNKNOWN && STRING_TO_LOCALE.ContainsKey(gameLocale))
+                    res = gameLocale;
+            }
+            catch { }
 
-            Utils.MyLogger(BepInEx.Logging.LogLevel.Warning, $"CurrentCulture: {res}, Hearthstone {Localization.GetLocale()}, HsMod {pluginInitLanague.Value}.");
-            return res;
+            string cultureCode = "";
+            if (string.IsNullOrEmpty(res))
+            {
+                try
+                {
+                    cultureCode = System.Globalization.CultureInfo.CurrentCulture.Name.Replace("-", "");
+                    if (STRING_TO_LOCALE.ContainsKey(cultureCode))
+                        res = cultureCode;
+                }
+                catch { }
+            }
+
+            //都取不到有效值时返回UNKNOWN：不持久化错误结果，下次启动可重新检测
+            Utils.MyLogger(BepInEx.Logging.LogLevel.Warning, $"CurrentCulture: {cultureCode}, Hearthstone {gameLocale}, detected {res ?? "UNKNOWN"}, HsMod {pluginInitLanague.Value}.");
+            return string.IsNullOrEmpty(res) ? "UNKNOWN" : res;
         }
 
         public static string GetLangFileContext(string lang)

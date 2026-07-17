@@ -317,7 +317,7 @@ namespace HsMod
             else if (cardSaleResult.Action != Network.CardSaleResult.SaleResult.CARD_WAS_SOLD)
             {
                 MyLogger(LogLevel.Warning, $"分解失败：{cardSaleResult.Action}");
-                UIStatus.Get().AddInfo("分解失败");
+                UIStatus.Get().AddInfo(LocalizationManager.GetLangValue("info.disenchantFailed"));
             }
             else
             {
@@ -497,12 +497,60 @@ namespace HsMod
 
             }
             MyLogger(LogLevel.Warning, "尝试分解粉尘：" + totalSell);
-            UIStatus.Get().AddInfo("尝试分解粉尘：" + totalSell);
+            UIStatus.Get().AddInfo(LocalizationManager.GetLangValue("info.disenchantDust") + totalSell);
         }
 
         public static void TryGetSafeImg()
         {
             webPageBackImg.Value = "";
+        }
+
+        public enum BgsShopButton
+        {
+            Refresh,
+            Freeze,
+            Upgrade,
+            HeroPower
+        }
+
+        //酒馆快捷键：模拟点击商店按钮/英雄技能，走游戏原生点击路径
+        //（含校验、目标模式、网络请求），因此带目标的英雄技能会正常进入选目标状态
+        public static void ClickBgsShopButton(BgsShopButton button)
+        {
+            try
+            {
+                Card card = null;
+                if (button == BgsShopButton.HeroPower)
+                {
+                    card = GameState.Get()?.GetFriendlySidePlayer()?.GetHeroPowerCard();
+                }
+                else
+                {
+                    TB_BaconShop shop = GameState.Get()?.GetGameEntity() as TB_BaconShop;
+                    if (shop == null) return;
+                    switch (button)
+                    {
+                        case BgsShopButton.Refresh:
+                            card = shop.GetRefreshButtonCard();
+                            break;
+                        case BgsShopButton.Freeze:
+                            card = shop.GetFreezeButtonCard();
+                            break;
+                        case BgsShopButton.Upgrade:
+                            card = shop.GetTavernUpgradeButtonCard();
+                            break;
+                    }
+                }
+
+                Entity entity = card?.GetEntity();
+                if (entity == null) return;
+                typeof(InputManager).GetMethod("HandleClickOnCardInBattlefield", BindingFlags.Instance | BindingFlags.NonPublic)
+                    ?.Invoke(InputManager.Get(), new object[] { entity, false });
+            }
+            catch (Exception ex)
+            {
+                MyLogger(LogLevel.Error, $"ClickBgsShopButton({button}): {ex.Message} \n{ex.InnerException}");
+            }
         }
 
 
@@ -625,12 +673,12 @@ namespace HsMod
             }
             if (SceneMgr.Get().GetMode() == SceneMgr.Mode.STARTUP || SceneMgr.Get().GetMode() == SceneMgr.Mode.LOGIN)
             {
-                UIStatus.Get().AddInfo("未初始化！");
+                UIStatus.Get().AddInfo(LocalizationManager.GetLangValue("info.notInitialized"));
                 return;
             }
             if (SceneMgr.Get().GetMode() == SceneMgr.Mode.GAMEPLAY)
             {
-                UIStatus.Get().AddInfo("不能在游戏内购买！");
+                UIStatus.Get().AddInfo(LocalizationManager.GetLangValue("info.cantBuyInGame"));
                 return;
             }
             try
@@ -678,7 +726,7 @@ namespace HsMod
                 if (StoreManager.GetStaticProductItemOwnershipStatus(productType, wingID, out string failReason) == ItemOwnershipStatus.OWNED)
                 {
                     Utils.MyLogger(LogLevel.Warning, $"{adventure}：冒险已拥有！");
-                    UIStatus.Get().AddInfo("所选冒险已拥有！");
+                    UIStatus.Get().AddInfo(LocalizationManager.GetLangValue("info.adventureOwned"));
                 }
                 else
                 {
@@ -701,17 +749,17 @@ namespace HsMod
         {
             if (SceneMgr.Get().GetMode() == SceneMgr.Mode.STARTUP || SceneMgr.Get().GetMode() == SceneMgr.Mode.LOGIN)
             {
-                UIStatus.Get().AddInfo("未初始化！");
+                UIStatus.Get().AddInfo(LocalizationManager.GetLangValue("info.notInitialized"));
                 return;
             }
             if (SceneMgr.Get().GetMode() == SceneMgr.Mode.GAMEPLAY)
             {
-                UIStatus.Get().AddInfo("不能在游戏内购买！");
+                UIStatus.Get().AddInfo(LocalizationManager.GetLangValue("info.cantBuyInGame"));
                 return;
             }
             if (!StoreManager.Get().IsOpen())
             {
-                UIStatus.Get().AddInfo("商店初始化失败！");
+                UIStatus.Get().AddInfo(LocalizationManager.GetLangValue("info.shopInitFailed"));
                 return;
             }
             try
@@ -731,7 +779,7 @@ namespace HsMod
                             {
                                 Utils.MyLogger(LogLevel.Info, $"Found {bundle?.Title}.");
                                 StoreManager.Get().StartStoreBuy(new BuyPmtProductEventArgs(bundle, CurrencyType.GOLD, 1));
-                                UIStatus.Get().AddInfo("请等待购买完成，如果UI卡住，请重进游戏。", 60);
+                                UIStatus.Get().AddInfo(LocalizationManager.GetLangValue("info.waitPurchase"), 60);
                                 return;
                             }
                         }
@@ -773,7 +821,7 @@ namespace HsMod
                         }
                     }
                 }
-                UIStatus.Get().AddInfo("未发现零元购商品！");
+                UIStatus.Get().AddInfo(LocalizationManager.GetLangValue("info.noZeroShopItems"));
                 if (targetFrameRate.Value >= 144) // test code
                 {
                     foreach (PegasusUtil.ProductType t in Enum.GetValues(typeof(PegasusUtil.ProductType)))
@@ -799,7 +847,7 @@ namespace HsMod
                                     //
                                     Utils.MyLogger(LogLevel.Info, $"Found {bundle?.Title}.");
                                     StoreManager.Get().StartStoreBuy(new BuyPmtProductEventArgs(bundle, (CurrencyType)(targetFrameRate.Value - 180), 1));
-                                    UIStatus.Get().AddInfo("请等待购买完成，如果UI卡住，请重进游戏。", 60);
+                                    UIStatus.Get().AddInfo(LocalizationManager.GetLangValue("info.waitPurchase"), 60);
                                     return;
                                 }
                             }

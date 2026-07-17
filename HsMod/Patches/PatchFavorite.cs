@@ -13,9 +13,99 @@ namespace HsMod
     {
         public class PatchFavorite
         {
+            private static bool isRewindRestoring;
+
+            private static void RefreshCardVisuals(Card card)
+            {
+                Actor actor = card?.GetActor();
+                Entity entity = card?.GetEntity();
+
+                if (actor == null || entity == null)
+                    return;
+
+                actor.SetCard(card);
+                actor.SetCardDefFromEntity(entity);
+                actor.SetEntity(entity);
+                actor.UpdateAllComponents();
+            }
+
+            private static void RestoreRewindCardVisuals()
+            {
+                if (!isRewindRestoring)
+                    return;
+
+                isRewindRestoring = false;
+
+                GameState gameState = GameState.Get();
+                if (gameState == null)
+                    return;
+
+                List<Entity> entities = new List<Entity>();
+                foreach (Entity entity in gameState.GetEntityMap().Values)
+                    entities.Add(entity);
+
+                foreach (Entity entity in entities)
+                {
+                    try
+                    {
+                        if (entity == null || (entity.GetZone() != TAG_ZONE.PLAY && entity.GetZone() != TAG_ZONE.HAND))
+                            continue;
+
+                        Card card = entity.GetCard();
+                        if (card?.GetActor() == null)
+                            continue;
+
+                        entity.SetRealTimePremium(entity.GetPremiumType());
+                        RefreshCardVisuals(card);
+                    }
+                    catch (Exception ex)
+                    {
+                        Utils.MyLogger(BepInEx.Logging.LogLevel.Warning, $"RestoreRewindCardVisuals: {ex}");
+                    }
+                }
+            }
+
+            [HarmonyPrefix]
+            [HarmonyPatch(typeof(RewindGameSpellController), "OnProcessTaskList")]
+            public static void RewindStarted()
+            {
+                isRewindRestoring = true;
+            }
+
+            [HarmonyPrefix]
+            [HarmonyPatch(typeof(RewindGameSpellController), "DeleteEntityFromClientEntityMap")]
+            public static bool PreservePetDuringRewind(Entity entity)
+            {
+                return entity == null || !entity.IsPet() || entity.GetZone() != TAG_ZONE.COSMETIC;
+            }
+
+            [HarmonyPostfix]
+            [HarmonyPatch(typeof(SpellController), "OnFinishedTaskList")]
+            public static void RewindFinished(SpellController __instance)
+            {
+                if (__instance is RewindGameSpellController)
+                    RestoreRewindCardVisuals();
+            }
+
             private static bool IsBgsLocalCollectionFavoriteOverrideEnabled()
             {
                 return isBgsUnlockCollectionEnable.Value;
+            }
+
+            [HarmonyPrefix]
+            [HarmonyPatch(typeof(PetControllerGame), "InitializeTreat")]
+            [HarmonyPatch(typeof(PetControllerGame), "InitializeToy")]
+            public static bool PatchLocalPetItemInitialization()
+            {
+                return !BgPetSpoofer.IsInitializingLocalPet;
+            }
+
+            [HarmonyPrefix]
+            [HarmonyPatch(typeof(Network), "RequestGeneratePetTreat")]
+            [HarmonyPatch(typeof(Network), "RequestFeedPet")]
+            public static bool PatchLocalPetTreatRequests()
+            {
+                return !BgPetSpoofer.IsInitializingLocalPet;
             }
 
             private static void SetBgsBoardFavoriteState(Hearthstone.DataModels.BattlegroundsBoardSkinCollectionPageDataModel pageModel, int favoriteDbid)
@@ -527,7 +617,8 @@ namespace HsMod
                 if (!IsBgsLocalCollectionFavoriteOverrideEnabled() || skinPet.Value == -1)
                     return true;
 
-                petVariantId = skinPet.Value;
+                // Keep the selected pet out of FindGame and render it locally through BgPetSpoofer.
+                petVariantId = null;
                 deckPetVariantId = null;
                 return false;
             }
@@ -617,6 +708,7 @@ namespace HsMod
                 {
                     if (skinPet.Value != -1)
                     {
+                        // The pet-corner marker is decorative; the model is provided locally or by the game.
                         Player playerBySide2 = GameState.Get()?.GetPlayerBySide(Player.Side.FRIENDLY);
                         playerBySide2?.SetTag(GAME_TAG.PET_VARIANT_ID, skinPet.Value);
                     }
@@ -846,13 +938,13 @@ namespace HsMod
             {
                 try
                 {
+                    if (isRewindRestoring)
+                        return;
+
                     // Todo: 添加更细致化的判断条件。
                     if ((__instance?.GetEntity()?.GetZone() == TAG_ZONE.PLAY) || (__instance?.GetEntity()?.GetZone() == TAG_ZONE.HAND))
                     {
-                        __instance?.GetActor()?.SetCard(__instance);
-                        __instance?.GetActor()?.SetCardDefFromEntity(__instance.GetEntity());
-                        __instance?.GetActor()?.SetEntity(__instance.GetEntity());
-                        __instance?.GetActor()?.UpdateAllComponents();
+                        RefreshCardVisuals(__instance);
                     }
                     //if (__instance?.GetEntity()?.GetCard()?.GetControllerSide() == Player.Side.FRIENDLY)
                     //{

@@ -12,17 +12,22 @@ namespace HsMod
             [HarmonyPatch(typeof(SplashScreen), "UpdateQueueInfo")]
             public static void PatchSplashScreenUpdateQueueInfo(ref Network.QueueInfo queueInfo)
             {
-                if (isIGMMessageShow.Value)
-                {
-                    UIStatus.Get()?.AddInfo(string.Concat(new string[] {
-                                "当前排队人数：",
-                                queueInfo.position.ToString(),
-                                ", 还剩",
-                                (queueInfo.secondsTilEnd / 60L).ToString(),
-                                "分钟"
-                    }), ((float)(queueInfo.secondsTilEnd)) + 3f);
-                    Utils.MyLogger(BepInEx.Logging.LogLevel.Warning, $"当前排队人数：{queueInfo.position}，还剩{queueInfo.secondsTilEnd / 60L}分钟（{queueInfo.secondsTilEnd}秒）。");
-                }
+                if (!isIGMMessageShow.Value) return;
+
+                long secs = queueInfo.secondsTilEnd;
+                //无真实排队时游戏会给出哨兵/垃圾值（负数或超大），只在合理范围内显示，
+                //否则会出现"-29735689分钟"之类的乱码时间
+                if (queueInfo.position <= 0 || secs <= 0 || secs > 86400) return;
+
+                string text = string.Concat(
+                    LocalizationManager.GetLangValue("info.queuePosition"),
+                    queueInfo.position.ToString(),
+                    LocalizationManager.GetLangValue("info.queueRemaining"),
+                    (secs / 60L).ToString(),
+                    LocalizationManager.GetLangValue("info.queueMinutes"));
+                float duration = secs < 3 ? 3f : (secs > 60 ? 60f : (float)secs);
+                UIStatus.Get()?.AddInfo(text, duration);
+                Utils.MyLogger(BepInEx.Logging.LogLevel.Warning, $"queue: position {queueInfo.position}, {secs / 60L} min ({secs} sec).");
             }
 
 

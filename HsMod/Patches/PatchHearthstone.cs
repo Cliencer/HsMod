@@ -38,6 +38,43 @@ namespace HsMod
 
                 return Utils.GetPremiumType(ref __instance, ref __result);
             }
+
+            //屏蔽主播模式：读取时强制返回关闭
+            [HarmonyPrefix]
+            [HarmonyPatch(typeof(Options), "GetBool", new Type[] { typeof(Option) })]
+            public static bool PatchOptionsGetBool(Option __0, ref bool __result)
+            {
+                if (isBlockStreamerMode.Value && __0 == Option.STREAMER_MODE)
+                {
+                    __result = false;
+                    return false;
+                }
+                return true;
+            }
+
+            [HarmonyPrefix]
+            [HarmonyPatch(typeof(Options), "GetBool", new Type[] { typeof(Option), typeof(bool) })]
+            public static bool PatchOptionsGetBoolDefault(Option __0, ref bool __result)
+            {
+                if (isBlockStreamerMode.Value && __0 == Option.STREAMER_MODE)
+                {
+                    __result = false;
+                    return false;
+                }
+                return true;
+            }
+
+            //屏蔽主播模式：拦截 Ctrl+Shift+S 等途径的开启写入
+            [HarmonyPrefix]
+            [HarmonyPatch(typeof(Options), "SetBool", new Type[] { typeof(Option), typeof(bool) })]
+            public static bool PatchOptionsSetBool(Option __0, bool __1)
+            {
+                if (isBlockStreamerMode.Value && __0 == Option.STREAMER_MODE && __1)
+                {
+                    return false;
+                }
+                return true;
+            }
             [HarmonyPrefix]
             [HarmonyPatch(typeof(Actor), nameof(Actor.GetPremium))]
             public static bool PatchActorGetPremiumType(ref TAG_PREMIUM __result, ref Entity ___m_entity, ref Actor __instance)
@@ -388,7 +425,7 @@ namespace HsMod
                                         if (hintText != null)
                                         {
                                             hintText = hintText + "\n" + entityDef.GetCardTextInHand();
-                                            UIStatus.Get().AddInfo($"注意: {hintText}", 15f);
+                                            UIStatus.Get().AddInfo($"{LocalizationManager.GetLangValue("info.notice")}{hintText}", 15f);
                                         }
                                     }
                                 }
@@ -411,7 +448,7 @@ namespace HsMod
                         string hintText2 = string.Join(" ", hintList);
                         if (hintText2 != "")
                         {
-                            UIStatus.Get().AddInfo($"注意: {hintText2}", 15f);
+                            UIStatus.Get().AddInfo($"{LocalizationManager.GetLangValue("info.notice")}{hintText2}", 15f);
                         }
                     }
 

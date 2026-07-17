@@ -323,6 +323,27 @@ namespace HsMod
                 map[playerId] = true;
             }
         }
+
+        //静默全部对手（保留自己、当前玩家与双人队友），返回被静默的数量
+        public static int SquelchAllOpponents(this EnemyEmoteHandler __instance)
+        {
+            if (!(m_squelchedInfo.GetValue(__instance) is Map<int, bool> map)) return 0;
+            int self = -1, current = -1, teammate = -1;
+            try { self = GameState.Get()?.GetFriendlySidePlayer()?.GetPlayerId() ?? -1; } catch { }
+            try { current = GameState.Get()?.GetCurrentPlayer()?.GetPlayerId() ?? -1; } catch { }
+            try { teammate = GameState.Get()?.GetFriendlySidePlayer()?.GetTag((GAME_TAG)2939) ?? -1; } catch { }    //2939=双人队友PlayerId
+            int count = 0;
+            foreach (int id in map.Keys.ToList())
+            {
+                if (id == self || id == current || (teammate > 0 && id == teammate)) continue;
+                if (!map[id])
+                {
+                    map[id] = true;
+                    count++;
+                }
+            }
+            return count;
+        }
     }
 
     //开包

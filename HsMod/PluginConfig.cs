@@ -31,6 +31,7 @@ namespace HsMod
         public static ConfigEntry<bool> isRewardToastShow;
         public static ConfigEntry<bool> isAutoOpenBoxesRewardEnable;
         public static ConfigEntry<bool> isFullnameShow;
+        public static ConfigEntry<bool> isBlockStreamerMode;
         public static ConfigEntry<bool> isOpponentRankInGameShow;
         public static ConfigEntry<bool> isSkipHeroIntro;
         public static ConfigEntry<bool> isThinkEmotesEnable;
@@ -60,6 +61,9 @@ namespace HsMod
         public static ConfigEntry<bool> isBgsGoldenEnable;
         public static ConfigEntry<bool> isBgsSeasonTicketUnlock;
         public static ConfigEntry<bool> isBgsUnlockCollectionEnable;
+        public static ConfigEntry<bool> isBgRankEnable;
+        public static ConfigEntry<bool> isBgSessionStatsEnable;
+        public static ConfigEntry<bool> isBgAutoSquelchEnable;
 
 
         public static ConfigEntry<bool> isPatchAssetLoader;
@@ -92,6 +96,12 @@ namespace HsMod
         public static ConfigEntry<KeyboardShortcut> keyZeroDollarShopping;
         public static ConfigEntry<KeyboardShortcut> keyShowFPS;
 
+        public static ConfigEntry<KeyboardShortcut> keyBgsRefresh;
+        public static ConfigEntry<KeyboardShortcut> keyBgsFreeze;
+        public static ConfigEntry<KeyboardShortcut> keyBgsUpgrade;
+        public static ConfigEntry<KeyboardShortcut> keyBgsHeroPower;
+        public static ConfigEntry<KeyboardShortcut> keyBgsTeammateBoard;
+
         public static ConfigEntry<KeyboardShortcut> keyEmoteGreetings;
         public static ConfigEntry<KeyboardShortcut> keyEmoteWellPlayed;
         public static ConfigEntry<KeyboardShortcut> keyEmoteThanks;
@@ -111,6 +121,7 @@ namespace HsMod
         public static ConfigEntry<int> skinOpposingPet;
         public static ConfigEntry<bool> isSkinDefalutHeroEnable;
 
+        public static ConfigEntry<bool> isModSettingsButtonShow;
         public static ConfigEntry<bool> isShowFPSEnable;
         public static ConfigEntry<bool> isInternalModeEnable;
         public static ConfigEntry<int> webServerPort;
@@ -197,6 +208,7 @@ namespace HsMod
             timeGear = config.Bind(LocalizationManager.GetLangValue("timeGear.label"), LocalizationManager.GetLangValue("timeGear.name"), 0f, new ConfigDescription(LocalizationManager.GetLangValue("timeGear.description"), new AcceptableValueRange<float>(-32, 32)));
             isShowFPSEnable = config.Bind(LocalizationManager.GetLangValue("isShowFPSEnable.label"), LocalizationManager.GetLangValue("isShowFPSEnable.name"), false, LocalizationManager.GetLangValue("isShowFPSEnable.description"));
             targetFrameRate = config.Bind(LocalizationManager.GetLangValue("targetFrameRate.label"), LocalizationManager.GetLangValue("targetFrameRate.name"), -1, new ConfigDescription(LocalizationManager.GetLangValue("targetFrameRate.description"), new AcceptableValueRange<int>(-1, 2333)));
+            isModSettingsButtonShow = config.Bind(LocalizationManager.GetLangValue("isModSettingsButtonShow.label"), LocalizationManager.GetLangValue("isModSettingsButtonShow.name"), true, LocalizationManager.GetLangValue("isModSettingsButtonShow.description"));
 
             isIGMMessageShow = config.Bind(LocalizationManager.GetLangValue("isIGMMessageShow.label"), LocalizationManager.GetLangValue("isIGMMessageShow.name"), true, LocalizationManager.GetLangValue("isIGMMessageShow.description"));
             isAlertPopupShow = config.Bind(LocalizationManager.GetLangValue("isAlertPopupShow.label"), LocalizationManager.GetLangValue("isAlertPopupShow.name"), true, LocalizationManager.GetLangValue("isAlertPopupShow.description"));
@@ -224,6 +236,7 @@ namespace HsMod
 
             isQuickModeEnable = config.Bind(LocalizationManager.GetLangValue("isQuickModeEnable.label"), LocalizationManager.GetLangValue("isQuickModeEnable.name"), false, LocalizationManager.GetLangValue("isQuickModeEnable.description"));
             isFullnameShow = config.Bind(LocalizationManager.GetLangValue("isFullnameShow.label"), LocalizationManager.GetLangValue("isFullnameShow.name"), false, LocalizationManager.GetLangValue("isFullnameShow.description"));
+            isBlockStreamerMode = config.Bind(LocalizationManager.GetLangValue("isBlockStreamerMode.label"), LocalizationManager.GetLangValue("isBlockStreamerMode.name"), false, LocalizationManager.GetLangValue("isBlockStreamerMode.description"));
             isOpponentRankInGameShow = config.Bind(LocalizationManager.GetLangValue("isOpponentRankInGameShow.label"), LocalizationManager.GetLangValue("isOpponentRankInGameShow.name"), false, LocalizationManager.GetLangValue("isOpponentRankInGameShow.description"));
             isCardTrackerEnable = config.Bind(LocalizationManager.GetLangValue("isCardTrackerEnable.label"), LocalizationManager.GetLangValue("isCardTrackerEnable.name"), false, LocalizationManager.GetLangValue("isCardTrackerEnable.description"));
             isCardRevealedEnable = config.Bind(LocalizationManager.GetLangValue("isCardRevealedEnable.label"), LocalizationManager.GetLangValue("isCardRevealedEnable.name"), false, LocalizationManager.GetLangValue("isCardRevealedEnable.description"));
@@ -249,6 +262,9 @@ namespace HsMod
             isBgsGoldenEnable = config.Bind(LocalizationManager.GetLangValue("isBgsGoldenEnable.label"), LocalizationManager.GetLangValue("isBgsGoldenEnable.name"), false, LocalizationManager.GetLangValue("isBgsGoldenEnable.description"));
             isBgsSeasonTicketUnlock = config.Bind(LocalizationManager.GetLangValue("isBgsSeasonTicketUnlock.label"), LocalizationManager.GetLangValue("isBgsSeasonTicketUnlock.name"), false, LocalizationManager.GetLangValue("isBgsSeasonTicketUnlock.description"));
             isBgsUnlockCollectionEnable = config.Bind(LocalizationManager.GetLangValue("isBgsUnlockCollectionEnable.label"), LocalizationManager.GetLangValue("isBgsUnlockCollectionEnable.name"), false, LocalizationManager.GetLangValue("isBgsUnlockCollectionEnable.description"));
+            isBgRankEnable = config.Bind(LocalizationManager.GetLangValue("isBgRankEnable.label"), LocalizationManager.GetLangValue("isBgRankEnable.name"), true, LocalizationManager.GetLangValue("isBgRankEnable.description"));
+            isBgSessionStatsEnable = config.Bind(LocalizationManager.GetLangValue("isBgSessionStatsEnable.label"), LocalizationManager.GetLangValue("isBgSessionStatsEnable.name"), true, LocalizationManager.GetLangValue("isBgSessionStatsEnable.description"));
+            isBgAutoSquelchEnable = config.Bind(LocalizationManager.GetLangValue("isBgAutoSquelchEnable.label"), LocalizationManager.GetLangValue("isBgAutoSquelchEnable.name"), false, LocalizationManager.GetLangValue("isBgAutoSquelchEnable.description"));
             isPatchAssetLoader = config.Bind(LocalizationManager.GetLangValue("isPatchAssetLoader.label"), LocalizationManager.GetLangValue("isPatchAssetLoader.name"), false, LocalizationManager.GetLangValue("isPatchAssetLoader.description"));
             shieldMainBoxLuckyDraw = config.Bind(LocalizationManager.GetLangValue("shieldMainBoxLuckyDraw.label"), LocalizationManager.GetLangValue("shieldMainBoxLuckyDraw.name"), false, LocalizationManager.GetLangValue("shieldMainBoxLuckyDraw.description"));
             SaveCardTextures = config.Bind(LocalizationManager.GetLangValue("SaveCardTextures.label"), LocalizationManager.GetLangValue("SaveCardTextures.name"), false, LocalizationManager.GetLangValue("SaveCardTextures.description"));
@@ -282,6 +298,12 @@ namespace HsMod
             //keyRuin = config.Bind(LocalizationManager.GetLangValue("keyRuin.label"), LocalizationManager.GetLangValue("keyRuin.name"), new KeyboardShortcut(KeyCode.R, KeyCode.LeftControl), LocalizationManager.GetLangValue("keyRuin.description"));
             keyReadNewCards = config.Bind(LocalizationManager.GetLangValue("keyReadNewCards.label"), LocalizationManager.GetLangValue("keyReadNewCards.name"), new KeyboardShortcut(KeyCode.R, KeyCode.LeftControl), LocalizationManager.GetLangValue("keyReadNewCards.description"));
             keyShowFPS = config.Bind(LocalizationManager.GetLangValue("keyShowFPS.label"), LocalizationManager.GetLangValue("keyShowFPS.name"), new KeyboardShortcut(KeyCode.P, KeyCode.LeftControl), LocalizationManager.GetLangValue("keyShowFPS.description"));
+
+            keyBgsRefresh = config.Bind(LocalizationManager.GetLangValue("keyBgsRefresh.label"), LocalizationManager.GetLangValue("keyBgsRefresh.name"), new KeyboardShortcut(KeyCode.R), LocalizationManager.GetLangValue("keyBgsRefresh.description"));
+            keyBgsFreeze = config.Bind(LocalizationManager.GetLangValue("keyBgsFreeze.label"), LocalizationManager.GetLangValue("keyBgsFreeze.name"), new KeyboardShortcut(KeyCode.F), LocalizationManager.GetLangValue("keyBgsFreeze.description"));
+            keyBgsUpgrade = config.Bind(LocalizationManager.GetLangValue("keyBgsUpgrade.label"), LocalizationManager.GetLangValue("keyBgsUpgrade.name"), new KeyboardShortcut(KeyCode.U), LocalizationManager.GetLangValue("keyBgsUpgrade.description"));
+            keyBgsHeroPower = config.Bind(LocalizationManager.GetLangValue("keyBgsHeroPower.label"), LocalizationManager.GetLangValue("keyBgsHeroPower.name"), new KeyboardShortcut(KeyCode.H), LocalizationManager.GetLangValue("keyBgsHeroPower.description"));
+            keyBgsTeammateBoard = config.Bind(LocalizationManager.GetLangValue("keyBgsTeammateBoard.label"), LocalizationManager.GetLangValue("keyBgsTeammateBoard.name"), new KeyboardShortcut(KeyCode.T), LocalizationManager.GetLangValue("keyBgsTeammateBoard.description"));
 
             keyEmoteGreetings = config.Bind(LocalizationManager.GetLangValue("keyEmoteGreetings.label"), LocalizationManager.GetLangValue("keyEmoteGreetings.name"), new KeyboardShortcut(KeyCode.Alpha1), LocalizationManager.GetLangValue("keyEmoteGreetings.description"));
             keyEmoteWellPlayed = config.Bind(LocalizationManager.GetLangValue("keyEmoteWellPlayed.label"), LocalizationManager.GetLangValue("keyEmoteWellPlayed.name"), new KeyboardShortcut(KeyCode.Alpha2), LocalizationManager.GetLangValue("keyEmoteWellPlayed.description"));
