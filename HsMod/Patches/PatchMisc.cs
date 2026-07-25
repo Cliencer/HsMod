@@ -575,6 +575,11 @@ namespace HsMod
                 {
                     int dId = -1;
                     CollectionUtils.ViewMode viewMode = CollectionManager.Get().GetCollectibleDisplay().GetViewMode();
+                    var thisActor = __instance.GetActor();
+                    if (thisActor == null)
+                    {
+                        return true;
+                    }
                     switch (viewMode)
                     {
 
@@ -597,21 +602,21 @@ namespace HsMod
                 return true;
             }
             [HarmonyPostfix]
-            [HarmonyPatch(typeof(BaconCollectionDisplay), "ShowFinisherDetailsDisplay")]
-            public static void PatchShowFinisherDetailsDisplay(ref Hearthstone.DataModels.BattlegroundsFinisherDataModel dataModel, ref Hearthstone.DataModels.BattlegroundsFinisherCollectionPageDataModel pageModel)
+            [HarmonyPatch(typeof(BaconFinisherCollectionDetails), "Show")]
+            public static void PatchShowFinisherDetailsDisplay(ref Hearthstone.DataModels.BattlegroundsFinisherDataModel ___m_dataModel)
             {
                 if (isShowCollectionCardIdEnable.Value)
                 {
-                    UIStatus.Get().AddInfo($"ID: {dataModel.FinisherDbiId}");
+                    UIStatus.Get().AddInfo($"ID: {___m_dataModel?.FinisherDbiId}");
                 }
             }
             [HarmonyPostfix]
-            [HarmonyPatch(typeof(BaconCollectionDisplay), "ShowBoardDetailsDisplay")]
-            public static void PatchShowBoardDetailsDisplay(ref Hearthstone.DataModels.BattlegroundsBoardSkinDataModel dataModel, ref Hearthstone.DataModels.BattlegroundsBoardSkinCollectionPageDataModel pageModel)
+            [HarmonyPatch(typeof(BaconBoardCollectionDetails), "Show")]
+            public static void PatchShowBoardDetailsDisplay(ref Hearthstone.DataModels.BattlegroundsBoardSkinDataModel ___m_dataModel)
             {
                 if (isShowCollectionCardIdEnable.Value)
                 {
-                    UIStatus.Get().AddInfo($"ID: {dataModel.BoardDbiId}");
+                    UIStatus.Get().AddInfo($"ID: {___m_dataModel?.BoardDbiId}");
                 }
             }
 

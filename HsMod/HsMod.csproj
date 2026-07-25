@@ -403,6 +403,7 @@
     <Compile Include="BgAutoSquelch.cs" />
     <Compile Include="PluginInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UtilsFakePet.cs" />
     <Compile Include="UtilsSkins.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="UtilsArgu.cs" />

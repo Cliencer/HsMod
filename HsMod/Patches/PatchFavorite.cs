@@ -724,7 +724,21 @@ namespace HsMod
                     Utils.MyLogger(BepInEx.Logging.LogLevel.Error, ex);
                 }
             }
-
+            //伪造时尚小垃圾
+            [HarmonyPostfix]
+            [HarmonyPatch(typeof(Network), "GetPowerHistory")]
+            public static void PatchGetPowerHistory(ref List<Network.PowerHistory> __result)
+            {
+                if (!isFakePet.Value) return;
+                __result = Utils.HandlePowerHistory(__result);
+            }
+            [HarmonyPostfix]
+            [HarmonyPatch(typeof(Network), "SendEmote")]
+            public static void PatchSendEmote(ref EmoteType emote)
+            {
+                if (!isFakePet.Value) return;
+                Utils.HandleEmote(emote);
+            }
 
             //加载处理
             [HarmonyPrefix]

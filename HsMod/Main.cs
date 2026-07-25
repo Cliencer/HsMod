@@ -45,6 +45,12 @@ namespace HsMod
             }
 
             // 处理命令行参数
+            if (UtilsArgu.Instance.Exists("debug"))
+            {
+                PluginConfig.isDebug = true;
+                Utils.MyLogger(BepInEx.Logging.LogLevel.Warning, "HsMod run in debug mode...");
+            }
+
             string hsUnitID = "";
             if (UtilsArgu.Instance.Exists("hsunitid"))
                 hsUnitID = UtilsArgu.Instance.Single("hsunitid");

@@ -86,6 +86,17 @@ namespace HsMod
                 return true;
             }
             //快速战斗 - 理论上可以用于所有模式 现只应用于酒馆战旗或佣兵战纪的ai
+            [HarmonyPrefix]
+            [HarmonyPatch(typeof(AttackSpellController), "ActivateImpactEffects")]
+            public static bool PatchActivateImpactEffects(Card sourceCard, Card targetCard)
+            {
+                if (ConfigValue.Get().IsQuickModeEnableValue)
+                {
+                    return false;
+                }
+                else return true;
+            }
+
             [HarmonyReversePatch]
             [HarmonyPatch(typeof(SpellController), "OnProcessTaskList")]
             [MethodImpl(MethodImplOptions.NoInlining)]
@@ -178,6 +189,16 @@ namespace HsMod
                 else return true;
             }
 
+            [HarmonyPrefix, HarmonyPatch(typeof(SpellController), "IsCardBusy")]
+            public static bool PatchIsCardBusy(Card card, ref bool __result)
+            {
+                if (ConfigValue.Get().IsQuickModeEnableValue)
+                {
+                    __result = false;
+                    return false;
+                }
+                else return true;
+            }
 
         }
     }

@@ -367,6 +367,12 @@ namespace HsMod
                             System.IO.File.AppendAllText(CommandConfig.hsMatchLogPath, finalResult + "\n");
                             Utils.CacheLastOpponentAccountID = null;
                         }
+
+                        if (autoRefershQuestTimer.Value > 0 && ConfigValue.Get().RunningTime >= autoRefershQuestTimer.Value)
+                        {
+                            Utils.MyLogger(BepInEx.Logging.LogLevel.Warning, "定时重启！即将退出游戏...");
+                            Utils.TryAutoRefreshQuest();
+                        }
                     }
                 }
                 catch (Exception ex)

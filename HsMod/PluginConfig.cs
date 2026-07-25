@@ -8,6 +8,8 @@ namespace HsMod
 {
     public static class PluginConfig
     {
+        public static bool isDebug = false;
+
         public static ConfigEntry<bool> isPluginEnable;
         public static ConfigEntry<string> pluginInitLanague;
         public static ConfigEntry<Locale> pluginLanague;
@@ -117,6 +119,7 @@ namespace HsMod
         public static ConfigEntry<int> skinBob;
         public static ConfigEntry<int> skinHero;
         public static ConfigEntry<int> skinOpposingHero;
+        public static ConfigEntry<bool> isFakePet;
         public static ConfigEntry<int> skinPet;
         public static ConfigEntry<int> skinOpposingPet;
         public static ConfigEntry<bool> isSkinDefalutHeroEnable;
@@ -131,6 +134,7 @@ namespace HsMod
         public static ConfigEntry<string> hsMatchLogPath;
         public static ConfigEntry<string> hsLogPath;
         public static ConfigEntry<long> autoQuitTimer;    // 定时退出
+        public static ConfigEntry<long> autoRefershQuestTimer;
 
         public static ConfigEntry<Utils.DevicePreset> fakeDevicePreset;
         public static ConfigEntry<OSCategory> fakeDeviceOs;
@@ -248,7 +252,7 @@ namespace HsMod
             isSignatureCardStateEnable = config.Bind(LocalizationManager.GetLangValue("isSignatureCardStateEnable.label"), LocalizationManager.GetLangValue("isSignatureCardStateEnable.name"), true, LocalizationManager.GetLangValue("isSignatureCardStateEnable.description"));
             signatureFirst = config.Bind(LocalizationManager.GetLangValue("signatureFirst.label"), LocalizationManager.GetLangValue("signatureFirst.name"), false, LocalizationManager.GetLangValue("signatureFirst.description"));
             previewCardPlaySounds = config.Bind(LocalizationManager.GetLangValue("previewCardPlaySounds.label"), LocalizationManager.GetLangValue("previewCardPlaySounds.name"), true, LocalizationManager.GetLangValue("previewCardPlaySounds.description"));
-            checkCollDeckValidForMode = config.Bind(LocalizationManager.GetLangValue("checkCollDeckValidForMode.label"), LocalizationManager.GetLangValue("checkCollDeckValidForMode.name"), true, LocalizationManager.GetLangValue("checkCollDeckValidForMode.description"));
+            checkCollDeckValidForMode = config.Bind(LocalizationManager.GetLangValue("checkCollDeckValidForMode.label"), LocalizationManager.GetLangValue("checkCollDeckValidForMode.name"), false, LocalizationManager.GetLangValue("checkCollDeckValidForMode.description"));
             oldSignatureSave = config.Bind(LocalizationManager.GetLangValue("oldSignatureSave.label"), LocalizationManager.GetLangValue("oldSignatureSave.name"), true, LocalizationManager.GetLangValue("oldSignatureSave.description"));
             goldenCardState = config.Bind(LocalizationManager.GetLangValue("goldenCardState.label"), LocalizationManager.GetLangValue("goldenCardState.name"), Utils.CardState.Default, LocalizationManager.GetLangValue("goldenCardState.description"));
             maxCardState = config.Bind(LocalizationManager.GetLangValue("maxCardState.label"), LocalizationManager.GetLangValue("maxCardState.name"), Utils.CardState.Default, LocalizationManager.GetLangValue("maxCardState.description"));
@@ -275,6 +279,7 @@ namespace HsMod
             skinBgsBoard = config.Bind(LocalizationManager.GetLangValue("skinBgsBoard.label"), LocalizationManager.GetLangValue("skinBgsBoard.name"), -1, LocalizationManager.GetLangValue("skinBgsBoard.description"));
             skinBgsFinisher = config.Bind(LocalizationManager.GetLangValue("skinBgsFinisher.label"), LocalizationManager.GetLangValue("skinBgsFinisher.name"), -1, LocalizationManager.GetLangValue("skinBgsFinisher.description"));
             skinBob = config.Bind(LocalizationManager.GetLangValue("skinBob.label"), LocalizationManager.GetLangValue("skinBob.name"), -1, LocalizationManager.GetLangValue("skinBob.description"));
+            isFakePet = config.Bind(LocalizationManager.GetLangValue("isFakePet.label"), LocalizationManager.GetLangValue("isFakePet.name"), false, LocalizationManager.GetLangValue("isFakePet.description"));
             skinPet = config.Bind(LocalizationManager.GetLangValue("skinPet.label"), LocalizationManager.GetLangValue("skinPet.name"), -1, LocalizationManager.GetLangValue("skinPet.description"));
             skinOpposingPet = config.Bind(LocalizationManager.GetLangValue("skinOpposingPet.label"), LocalizationManager.GetLangValue("skinOpposingPet.name"), -1, LocalizationManager.GetLangValue("skinOpposingPet.description"));
             isSkinDefalutHeroEnable = config.Bind(LocalizationManager.GetLangValue("isSkinDefalutHeroEnable.label"), LocalizationManager.GetLangValue("isSkinDefalutHeroEnable.name"), false, LocalizationManager.GetLangValue("isSkinDefalutHeroEnable.description"));
@@ -315,6 +320,7 @@ namespace HsMod
             hsLogPath = config.Bind(LocalizationManager.GetLangValue("hsLogPath.label"), LocalizationManager.GetLangValue("hsLogPath.name"), "", new ConfigDescription(LocalizationManager.GetLangValue("hsLogPath.description"), null, new object[] { "Advanced" }));
             hsMatchLogPath = config.Bind(LocalizationManager.GetLangValue("hsMatchLogPath.label"), LocalizationManager.GetLangValue("hsMatchLogPath.name"), Path.Combine(BepInEx.Paths.BepInExRootPath, "HsMod", "match.log"), LocalizationManager.GetLangValue("hsMatchLogPath.description"));
             autoQuitTimer = config.Bind(LocalizationManager.GetLangValue("autoQuitTimer.label"), LocalizationManager.GetLangValue("autoQuitTimer.name"), (long)0, LocalizationManager.GetLangValue("autoQuitTimer.description"));
+            autoRefershQuestTimer = config.Bind(LocalizationManager.GetLangValue("autoRefershQuestTimer.label"), LocalizationManager.GetLangValue("autoRefershQuestTimer.name"), (long)0, LocalizationManager.GetLangValue("autoRefershQuestTimer.description"));
             isFakeOpenEnable = config.Bind(LocalizationManager.GetLangValue("isFakeOpenEnable.label"), LocalizationManager.GetLangValue("isFakeOpenEnable.name"), false, LocalizationManager.GetLangValue("isFakeOpenEnable.description"));
             buyAdventure = config.Bind(LocalizationManager.GetLangValue("buyAdventure.label"), LocalizationManager.GetLangValue("buyAdventure.name"), Utils.BuyAdventureTemplate.DoNothing, LocalizationManager.GetLangValue("buyAdventure.description"));
             isKarazhanFixEnable = config.Bind(LocalizationManager.GetLangValue("isKarazhanFixEnable.label"), LocalizationManager.GetLangValue("isKarazhanFixEnable.name"), false, LocalizationManager.GetLangValue("isKarazhanFixEnable.description"));

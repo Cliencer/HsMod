@@ -1,4 +1,5 @@
-﻿using BepInEx.Logging;
+﻿using Assets;
+using BepInEx.Logging;
 using PegasusUtil;
 using System;
 using System.Collections;
@@ -499,6 +500,49 @@ namespace HsMod
             MyLogger(LogLevel.Warning, "尝试分解粉尘：" + totalSell);
             UIStatus.Get().AddInfo(LocalizationManager.GetLangValue("info.disenchantDust") + totalSell);
         }
+        public static void TryAutoRefreshQuest()
+        {
+            try
+            {
+
+                int i = 0;
+                foreach (Hearthstone.DataModels.QuestDataModel item in Hearthstone.Progression.QuestManager.Get().CreateActiveQuestsDataModel(Assets.QuestPool.QuestPoolType.DAILY, QuestPool.RewardTrackType.GLOBAL, true).Quests)
+                {
+                    if (item == null || i > 4)
+                    {
+                        break;
+                    }
+                    if (item.Progress == 0 && item.RerollCount > 0)
+                    {
+                        MyLogger(BepInEx.Logging.LogLevel.Warning, $@"尝试重置任务：{item.Name}({item.Description})");
+                        Hearthstone.Progression.QuestManager.Get().RerollQuest(item.QuestId);
+                    }
+                    i++;
+                }
+
+                i = 0;
+                foreach (Hearthstone.DataModels.QuestDataModel item in Hearthstone.Progression.QuestManager.Get().CreateActiveQuestsDataModel(Assets.QuestPool.QuestPoolType.WEEKLY, QuestPool.RewardTrackType.GLOBAL, true).Quests)
+                {
+                    if (item == null || i > 4)
+                    {
+                        break;
+                    }
+                    if (item.Progress == 0 && item.RerollCount > 0)
+                    {
+                        MyLogger(BepInEx.Logging.LogLevel.Warning, $@"尝试重置任务：{item.Name}({item.Description})");
+                        Hearthstone.Progression.QuestManager.Get().RerollQuest(item.QuestId);
+                    }
+                    i++;
+                }
+            }
+            catch (Exception ex)
+            {
+                MyLogger(BepInEx.Logging.LogLevel.Error, $@"任务信息异常: {ex}");
+            }
+
+        }
+
+
 
         public static void TryGetSafeImg()
         {

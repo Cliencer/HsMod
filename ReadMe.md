@@ -137,10 +137,11 @@ Choose BepInEx 5 (BepInEx 6 is still pre-release and is not adapted for now). He
 1. Download [BepInEx_macos_universal](https://github.com/BepInEx/BepInEx/releases) (BepInEx 5) and extract it into `Hearthstone/`.
 2. Copy every DLL from `HsMod/UnstrippedCorlibUnix` into `/Applications/Hearthstone/BepInEx/unstripped_corlib/`. Mono and Unity versions must match Hearthstone.
 3. In `run_bepinex.sh`, set `dll_search_path_override="BepInEx/unstripped_corlib"` and `executable_name="Hearthstone.app"`.
-4. Run `chmod u+x run_bepinex.sh`.
-5. Obtain a login token from a Battle.net login URL (see [client.config](#clientconfig)): copy the part after `http://localhost:0/?ST=` and before `&accountId=`.
-6. Optionally create a `client.config` so the token persists between launches.
-7. Download HsMod from Releases and unzip into `Hearthstone/BepInEx/plugins`.
+4. In `run_bepinex.sh`,  replace `export ARCHPREFERENCE="arm64,x86_64"` with `export ARCHPREFERENCE="x86_64"`, currently, Hearthstone still isn't arm64. (also refer to #308 for running via the command line.)
+5. Run `chmod u+x run_bepinex.sh`.
+6. Obtain a login token from a Battle.net login URL (see [client.config](#clientconfig)): copy the part after `http://localhost:0/?ST=` and before `&accountId=`.
+7. Optionally create a `client.config` so the token persists between launches.
+8. Download HsMod from Releases and unzip into `Hearthstone/BepInEx/plugins`.
 
 Launch with `./run_bepinex.sh TOKEN`, or `./run_bepinex.sh` when a `client.config` is present.
 
