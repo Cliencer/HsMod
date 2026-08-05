@@ -1,5 +1,6 @@
 using HarmonyLib;
 using System;
+using System.Collections.Generic;
 
 namespace HsMod
 {
@@ -8,6 +9,20 @@ namespace HsMod
         public class PatchAntiCheat
         {
             //禁用反作弊
+            private static IEnumerator<Blizzard.T5.Jobs.IAsyncJobResult> EmptyCoroutine()
+            {
+                yield break;
+            }
+
+            [HarmonyPrefix]
+            [HarmonyPatch(typeof(AntiCheatSDK.AntiCheatManager), "Initialize")]
+            public static bool PatchAntiCheatManagerInitialize(ref IEnumerator<Blizzard.T5.Jobs.IAsyncJobResult> __result, Blizzard.T5.Services.ServiceLocator serviceLocator)
+            {
+                Utils.MyLogger(BepInEx.Logging.LogLevel.Debug, "AntiCheat Initialize feature is disabled.");
+                __result = EmptyCoroutine();
+                return false;
+            }
+
             [HarmonyPrefix]
             [HarmonyPatch(typeof(AntiCheatSDK.AntiCheatManager), "OnLoginComplete")]
             public static bool PatchAntiCheatManagerOnLoginComplete()
