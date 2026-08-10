@@ -732,7 +732,7 @@ namespace HsMod
             }
 
             //toast变速修改
-            [HarmonyTranspiler]
+            [HarmonyPrefix]
             [HarmonyPatch(typeof(SocialToastMgr), "AddToast", new Type[]
             {
                     typeof(UserAttentionBlocker),
@@ -741,19 +741,9 @@ namespace HsMod
                     typeof(float),
                     typeof(bool)
             })]
-            public static IEnumerable<CodeInstruction> PatchSocialToastMgrAddToast(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+            public static void PatchSocialToastMgrAddToast(ref float __3)
             {
-                List<CodeInstruction> list = new List<CodeInstruction>(instructions);
-                int num = list.FindIndex((CodeInstruction x) => x.opcode == OpCodes.Ret);
-                if (num > 0)
-                {
-                    num++;
-                    list.Insert(num++, new CodeInstruction(OpCodes.Ldarg_3));
-                    list.Insert(num++, new CodeInstruction(OpCodes.Call, typeof(Time).GetProperty("timeScale", BindingFlags.Static | BindingFlags.Public).GetGetMethod()));
-                    list.Insert(num++, new CodeInstruction(OpCodes.Mul));
-                    list.Insert(num++, new CodeInstruction(OpCodes.Starg_S, (byte)3));
-                }
-                return list;
+                __3 *= Time.timeScale;
             }
 
             [HarmonyPostfix]
