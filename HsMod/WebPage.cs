@@ -112,8 +112,9 @@ namespace HsMod
             StringBuilder builder = new StringBuilder();
 
             builder.Append(@"<h3 style=""text-align: center;"">进程信息</h3>");
-            builder.Append("PID：");
+            builder.Append("PID: ");
             builder.Append(System.Diagnostics.Process.GetCurrentProcess()?.Id.ToString());
+            builder.Append($" ({System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture})");
             builder.Append("<br />");
             builder.Append("<hr />");
             builder.Append(@"<h3 style=""text-align: center;"">基本信息</h3>");
@@ -123,9 +124,14 @@ namespace HsMod
                 builder.Append("账号：");
                 builder.Append(BnetPresenceMgr.Get()?.GetMyPlayer()?.GetBattleTag()?.ToString());
                 builder.Append("<br />");
-                builder.Append("金币：");
-                builder.Append(netCache?.GetGoldBalance().ToString());
-                builder.Append("<br />");
+                CurrencyManager currencyManager;
+                if (Blizzard.T5.Services.ServiceManager.TryGet<CurrencyManager>(out currencyManager))
+                {
+                    currencyManager?.RefreshWallet();
+                    builder.Append("金币：");
+                    builder.Append(currencyManager?.GetBalance(CurrencyType.GOLD).ToString());
+                    builder.Append("<br />");
+                }
                 builder.Append("奥数之尘：");
                 builder.Append(netCache?.GetArcaneDustBalance().ToString());
                 builder.Append("<br />");
